@@ -1,0 +1,77 @@
+Y = !((A1 | A2) & !B1_N) implemented using CMOS
+
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* Power Supplies
+VDD VDD 0 1.8V
+VSS VSS 0 0V
+
+* Inputs
+
+* A1 input signal
+VA1 A1 0 PULSE(0 1.8 0 0.5n 0.5n 5n 10n)
+*VA1 A1 0 DC 1.8 
+
+* A2 input signal  
+* VA2 A2 0 PULSE(0 1.8 0 0.5n 0.5n 5n 10n)
+VA2 A2 0 DC 0  
+
+* B1_N input signal
+* VB1N B1_N 0 PULSE(0 1.8 0 0.5n 0.5n 5n 10n) 
+VB1N B1_N 0 DC 0
+
+* Architecture
+* Width for Pmos for As = 1.55
+.param A_w  = 1.25    
+.param A_l  = 0.15
+.param A_as = 3*A_l*A_w
+.param A_ps = 2*(3*A_l + A_w)
+
+.param B_w  = 1.25
+.param B_l  = 0.15
+.param B_as = 3*B_l*B_w
+.param B_ps = 2*(3*B_l + B_w)
+
+* The number of each mosfet indicates the strength. Here the standard width is same as that of inverter tuned 
+* for equal rise and fall time. We have connected the number of mosfets same the strength required at the point.
+* And we can't just keep on increasing the Width since the height of the design is fixed.
+
+* Also the least resolution of dimensions is taken to be 0.05um, for ease of layout.
+
+* NOT gate for !B1_N (Inverter)
+xm_n_01   B1_N_inv    B1_N   VSS VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+xm_p_01   B1_N_inv    B1_N   VDD VDD     sky130_fd_pr__pfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+
+
+* Implementing N side
+xm_n_02_1   Y          A1           n1  VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+xm_n_02_2   Y          A1           n1  VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+
+xm_n_03_1   Y          A2           n1  VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+xm_n_03_2   Y          A2           n1  VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+
+xm_n_04_1   n1         B1_N_inv     VSS VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+xm_n_04_2   n1         B1_N_inv     VSS VSS     sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740   pd=1.740
+
+* Implementing P side
+xm_p_02_1   p1          A1          VDD VDD     sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as} ad={A_as} ps={A_ps} pd={A_ps}
+xm_p_02_2   p1          A1          VDD VDD     sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as} ad={A_as} ps={A_ps} pd={A_ps}
+
+xm_p_03_1   Y           A2          p1  VDD     sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as} ad={A_as} ps={A_ps} pd={A_ps}
+xm_p_03_2   Y           A2          p1  VDD     sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as} ad={A_as} ps={A_ps} pd={A_ps}
+
+xm_p_04     Y           B1_N_inv    VDD VDD     sky130_fd_pr__pfet_01v8 l=0.15 w={B_w} as={B_as} ad={B_as} ps={B_ps} pd={B_ps}
+
+
+* Simulation control
+.tran 0.01n 15n
+
+.control
+run
+plot Y+2 A1
+*wrdata output_B1_t.txt v(B1_N) v(Y)
+wrdata data_A1.txt v(A1)   v(Y)
+*wrdata output_A2_t.txt v(A2)   v(Y) 
+.endc
+
+.end

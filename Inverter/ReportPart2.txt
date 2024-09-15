@@ -1,0 +1,10 @@
+Min voltage_out: -0.11992527 V
+Max voltage_out: 1.99811918 V
+Rise Time : 19.59999999999991ps
+Fall Time : 19.61999999999989ps
+Propagation delay :20.68000000000018 ps
+VIL : 0.762
+VIH : 0.997
+Noise Margin High : 0.74732174
+Noise Margin Low  : 0.6935739703
+Switching Voltage : 0.867

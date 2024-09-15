@@ -1,0 +1,27 @@
+Inverter loaded with another identical Inverter
+
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* the voltage sources:
+Vdd vdd gnd DC 1.8
+V1 in gnd DC 0
+
+Xnot1 in vdd gnd out not1
+Xnot2 out vdd gnd out2 not1
+
+.subckt not1 a vdd vss z
+xm01	z a	vdd	vdd sky130_fd_pr__pfet_01v8 l=0.15 w=1.2735 as=0.38205  ad=0.38205  ps=3.147 pd=3.147
+xm02	z a	vss	vss sky130_fd_pr__nfet_01v8 l=0.15 w=0.4 as=0.12 ad=0.12 ps=1.4 pd=1.4
+
+*Final w = 1.2735
+
+.ends
+
+* simulation command:
+.dc V1 0 1.8 0.001  ; Sweep V1 from 0 to 1.8V in 0.001V steps
+
+.control
+run
+plot in out
+wrdata output1_2.txt v(out) v(in)  
+.endc

@@ -1,0 +1,26 @@
+Transmission gate
+
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* Power supplies
+VDD VDD 0 1.8V
+VSS VSS 0 0V
+
+* Clock and Data Inputs
+Vclk  clk  0 PULSE(0 1.8 0 20p 20p 15n 30n)
+Vclkb clkb 0 PULSE(1.8 0 0 20p 20p 15n 30n)   
+Vd     d   0 PULSE(0 1.8 0 20p 20p 18n 23n)  
+
+* Transmission gate 1 (for sampling D on the falling edge of clock)
+xm_n_01 d clk  b VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.5 as=0.15 ad=0.15 ps=1.6 pd=1.6
+xm_p_01 d clkb b VDD sky130_fd_pr__pfet_01v8 l=0.15 w=0.5 as=0.15 ad=0.15 ps=1.6 pd=1.6
+
+* Simulation control
+.tran 0.01n 50n
+
+.control
+run
+plot b d+2 clk+4
+.endc
+
+.end

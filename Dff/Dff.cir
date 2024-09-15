@@ -1,0 +1,80 @@
+CMOS-based D Flip-Flop (Negative Edge-Triggered)
+
+
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* Power supplies
+VDD VDD 0 1.8V
+VSS VSS 0 0V
+
+* Architecture
+
+* Width for Pmos for As = 1.25
+.param A_w  = 1.25    
+.param A_l  = 0.15
+.param A_as = 3*A_l*A_w
+.param A_ps = 2*(3*A_l + A_w)
+
+* Clock and Data Inputs
+Vclk clk 0 PULSE(0 1.8 0 20p 20p 15n 30n)   
+Vd   d   0 PULSE(0 1.8 0 20p 20p 20n 60n)  
+
+* Inverter for clk (to create clkb)
+xm_n_03 clkb clk VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_03 clkb clk VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Inverters for D input
+xm_n_01 n1 d VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_01 n1 d VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+
+* Transmission gate 1
+xm_n_02 n1 clk  n2 VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_02 n1 clkb n2 VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Master latch Inverter 1
+xm_n_04 qn n2 VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_04 qn n2 VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Master latch inverter 2
+xm_n_05 d12 qn VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_05 d12 qn VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Transmission gate 2
+xm_n_06 d12 clkb  n2 VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_06 d12 clk   n2 VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+
+
+* Transmission gate 3
+xm_n_07 qn clkb  n3 VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_07 qn clk   n3 VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Slave latch Inverter 3
+xm_n_08 qn2 n3 VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_08 qn2 n3 VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Slave latch Inverter 4
+xm_n_09 d22 qn2 VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_09 d22 qn2 VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Transmission gate 4
+xm_n_10 d22 clk   n3 VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_10 d22 clkb  n3 VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Slave latch Inverter 4
+xm_n_11 q qn2 VSS VSS sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+xm_p_11 q qn2 VDD VDD sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+
+* Output load
+Cq q 0 10f
+
+* Simulation Control
+.tran 1n 100n
+
+.control
+run
+plot q d+2 clk+4
+.endc
+
+.end

@@ -1,0 +1,110 @@
+magic
+tech sky130A
+timestamp 1725999080
+<< nwell >>
+rect -120 90 85 285
+<< nmos >>
+rect 0 0 15 50
+<< pmos >>
+rect 0 110 15 265
+<< ndiff >>
+rect -50 35 0 50
+rect -50 15 -35 35
+rect -15 15 0 35
+rect -50 0 0 15
+rect 15 35 65 50
+rect 15 15 30 35
+rect 50 15 65 35
+rect 15 0 65 15
+<< pdiff >>
+rect -50 250 0 265
+rect -50 125 -35 250
+rect -15 125 0 250
+rect -50 110 0 125
+rect 15 250 65 265
+rect 15 125 30 250
+rect 50 125 65 250
+rect 15 110 65 125
+<< ndiffc >>
+rect -35 15 -15 35
+rect 30 15 50 35
+<< pdiffc >>
+rect -35 125 -15 250
+rect 30 125 50 250
+<< psubdiff >>
+rect -100 35 -50 50
+rect -100 15 -85 35
+rect -65 15 -50 35
+rect -100 0 -50 15
+<< nsubdiff >>
+rect -100 250 -50 265
+rect -100 125 -85 250
+rect -65 125 -50 250
+rect -100 110 -50 125
+<< psubdiffcont >>
+rect -85 15 -65 35
+<< nsubdiffcont >>
+rect -85 125 -65 250
+<< poly >>
+rect 0 265 15 280
+rect 0 50 15 110
+rect 0 -15 15 0
+rect -25 -25 15 -15
+rect -25 -45 -15 -25
+rect 5 -45 15 -25
+rect -25 -55 15 -45
+<< polycont >>
+rect -15 -45 5 -25
+<< locali >>
+rect -95 250 -5 255
+rect -95 125 -85 250
+rect -65 125 -35 250
+rect -15 125 -5 250
+rect -95 120 -5 125
+rect 20 250 60 255
+rect 20 125 30 250
+rect 50 125 60 250
+rect 20 120 60 125
+rect 40 40 60 120
+rect -95 35 -5 40
+rect -95 15 -85 35
+rect -65 15 -35 35
+rect -15 15 -5 35
+rect -95 10 -5 15
+rect 20 35 60 40
+rect 20 15 30 35
+rect 50 15 60 35
+rect 20 10 60 15
+rect 40 -15 60 10
+rect -120 -25 15 -15
+rect -120 -35 -15 -25
+rect -25 -45 -15 -35
+rect 5 -45 15 -25
+rect 40 -35 85 -15
+rect -25 -55 15 -45
+<< viali >>
+rect -85 125 -65 250
+rect -35 125 -15 250
+rect -85 15 -65 35
+rect -35 15 -15 35
+<< metal1 >>
+rect -120 250 85 255
+rect -120 125 -85 250
+rect -65 125 -35 250
+rect -15 125 85 250
+rect -120 120 85 125
+rect -120 35 85 40
+rect -120 15 -85 35
+rect -65 15 -35 35
+rect -15 15 85 35
+rect -120 10 85 15
+<< labels >>
+rlabel locali -120 -26 -120 -26 7 A
+port 1 w
+rlabel metal1 -120 25 -120 25 7 Vss
+port 2 w
+rlabel metal1 -120 188 -120 188 7 Vdd
+port 3 w
+rlabel locali 85 -25 85 -25 3 Y
+port 4 e
+<< end >>

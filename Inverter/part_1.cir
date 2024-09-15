@@ -1,0 +1,31 @@
+Inverter loaded with another identical Inverter
+
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* the voltage sources:
+Vdd vdd gnd DC 1.8
+V1 in gnd pulse(0 1.8 0p 20p 20p 1n 2n)
+
+Xnot1 in vdd gnd out not1
+Xnot2 out vdd gnd out2 not1
+
+
+* Final A_w = 1.25 for almost same rise and fall time and ease of design
+.param A_w  = 1.25    
+.param A_l  = 0.15
+.param A_as = 3*A_l*A_w
+.param A_ps = 2*(3*A_l + A_w)
+
+.subckt not1 a vdd vss z
+xm01	z a	vdd	vdd sky130_fd_pr__pfet_01v8 l=0.15 w={A_w} as={A_as}  ad={A_as}  ps={A_ps} pd={A_ps}
+xm02	z a	vss	vss sky130_fd_pr__nfet_01v8 l=0.15 w=0.42  as=0.1890  ad=0.1890  ps=1.740  pd=1.740
+.ends
+
+* simulation command:
+.tran 10fs 3ns
+
+.control
+run
+plot in out
+wrdata output1_1.txt v(out) v(in)  
+.endc
